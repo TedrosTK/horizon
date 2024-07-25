@@ -4,7 +4,7 @@ import React from 'react'
 
 const Home = () => {
 
-    const loggedIn = {firstName: 'Adrian'}
+    const loggedIn = {firstName: 'Tedros'}
   return (
     <section className="home">
         <div className="home-content">
