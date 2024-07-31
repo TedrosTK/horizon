@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Divide } from 'lucide-react'
+import { Divide, Loader2 } from 'lucide-react'
 import CustomInput from './CustomInput'
 import { authFormSchema } from '@/lib/utils'
 
@@ -26,6 +26,7 @@ import { authFormSchema } from '@/lib/utils'
 
 const AuthForm = ({type}:{type:string}) => {
     const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof authFormSchema>>({
@@ -40,7 +41,9 @@ const AuthForm = ({type}:{type:string}) => {
     function onSubmit(values: z.infer<typeof authFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    setIsLoading(true)
     console.log(values)
+    setIsLoading(false);
     }
     
   return (   
@@ -85,6 +88,53 @@ const AuthForm = ({type}:{type:string}) => {
             <>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        {type === 'sign-up' && (
+                           <>
+                            <CustomInput 
+                                control={form.control}
+                                name='firstName'
+                                label='First Name'
+                                placeholder='ex: John'
+                            />
+                            <CustomInput 
+                                control={form.control}
+                                name='LastName'
+                                label='Last Name'
+                                placeholder='ex: Doe'
+                            />
+                            <CustomInput 
+                                control={form.control}
+                                name='address'
+                                label='Address'
+                                placeholder='Enter your specific address'
+                            />
+                            <CustomInput 
+                                control={form.control}
+                                name='state'
+                                label='State'
+                                placeholder='ex: VA'
+                            />
+                            <CustomInput 
+                                control={form.control}
+                                name='postalCode'
+                                label='Postal Code / Zip Code'
+                                placeholder='ex: 12345'
+                            />
+                            <CustomInput 
+                                control={form.control}
+                                name='dateOfBirth'
+                                label='Date of Birth'
+                                placeholder='ex: MM-DD-YYYY'
+                            />
+                            
+                            <CustomInput 
+                                control={form.control}
+                                name='ssn'
+                                label='SSN'
+                                placeholder='000-00-0000'
+                            />
+                           </> 
+                        )}
                         <CustomInput 
                             control={form.control}
                             name='email'
@@ -97,9 +147,36 @@ const AuthForm = ({type}:{type:string}) => {
                             label='Password'
                             placeholder='Enter your password'
                         />
-                        <Button type="submit">Submit</Button>
+                        <div className='flex flex-col gap-4'>
+                            <Button className='form-btn' type="submit" disabled={isLoading}>
+                            {isLoading ? (
+                                    <>
+                                        <Loader2 
+                                            size={20}
+                                            className='animate-spin'
+                                        /> &nbsp;
+                                        Loading...
+                                    </> 
+                            ) : type === 'sign-in'
+                            ? 'Sign In' : 'Sign Up'}
+                            </Button>
+                        </div>
+                        
                     </form>
-                    </Form>
+                </Form>
+                <footer className="flex justify-center gap-1">
+                    <p className="text-14 font-normal text-gray-600">
+                        {type === 'sign-in'
+                        ? "Don't have an account?"
+                        : "Already have an account?"}
+                    </p>
+                    <Link href={type === 'sign-in' ? '/sign-up':'/sign-in'}
+                        className='form-link'>
+                            {type === "sign-in" ? 'Sign-up': 'Sign in'}
+                    </Link>
+                </footer>
+
+
             </>
         )}
     </section>
