@@ -21,6 +21,7 @@ import { Divide, Loader2 } from 'lucide-react'
 import CustomInput from './CustomInput'
 import { authFormSchema } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
+import { signIn, signUp } from '@/lib/actions/user.actions'
 
 
 
@@ -48,8 +49,8 @@ const onSubmit = async (data: z.infer<typeof formSchema>) => {
         // sign up with Appwrite and create link plate token
 
         if (type === 'sign-up') {
-            // const newUser =  await signUp(data);
-            // setUser(newUser);
+            const newUser =  await signUp(data);
+            setUser(newUser);
         }
         if(type === 'sign-in') {
             // const response = await signIn({
