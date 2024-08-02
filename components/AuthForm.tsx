@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Divide, Loader2 } from 'lucide-react'
 import CustomInput from './CustomInput'
 import { authFormSchema } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
 
 
 
@@ -27,26 +28,44 @@ import { authFormSchema } from '@/lib/utils'
 const AuthForm = ({type}:{type:string}) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter()
+
+    const formSchema = authFormSchema(type);
 
     // 1. Define your form.
-    const form = useForm<z.infer<typeof authFormSchema>>({
-        resolver: zodResolver(authFormSchema),
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
             password: ""
         },
     })
 
-    // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof authFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+// 2. Define a submit handler.
+const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
-    console.log(values)
-    setIsLoading(false);
+    try {
+        // sign up with Appwrite and create link plate token
+
+        if (type === 'sign-up') {
+            // const newUser =  await signUp(data);
+            // setUser(newUser);
+        }
+        if(type === 'sign-in') {
+            // const response = await signIn({
+            //     email: data.email,
+            //     password: data.password
+            // })
+            // if(response) router.push('/')
+        }
+    } catch (error) {
+        
+    } finally {
+        setIsLoading(false);
     }
+        }
     
-  return (   
+return (   
     <section className="auth-form">
         <header className="flex flex-col gap-5 md:gap-8">
             <Link href="/" className='cursor-pointer flex items-center gap-1'>
@@ -90,49 +109,62 @@ const AuthForm = ({type}:{type:string}) => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         {type === 'sign-up' && (
                            <>
+                            <div className='flex gap-4'>
+                                <CustomInput 
+                                    control={form.control}
+                                    name='firstName'
+                                    label='First Name'
+                                    placeholder='ex: John'
+                                    />
+                                <CustomInput 
+                                    control={form.control}
+                                    name='lastName'
+                                    label='Last Name'
+                                    placeholder='ex: Doe'
+                                />
+                            </div>
                             <CustomInput 
                                 control={form.control}
-                                name='firstName'
-                                label='First Name'
-                                placeholder='ex: John'
-                            />
-                            <CustomInput 
-                                control={form.control}
-                                name='LastName'
-                                label='Last Name'
-                                placeholder='ex: Doe'
-                            />
-                            <CustomInput 
-                                control={form.control}
-                                name='address'
+                                name='address1'
                                 label='Address'
                                 placeholder='Enter your specific address'
                             />
                             <CustomInput 
                                 control={form.control}
-                                name='state'
-                                label='State'
-                                placeholder='ex: VA'
+                                name='city'
+                                label='City'
+                                placeholder='Enter your city'
                             />
-                            <CustomInput 
-                                control={form.control}
-                                name='postalCode'
-                                label='Postal Code / Zip Code'
-                                placeholder='ex: 12345'
-                            />
-                            <CustomInput 
-                                control={form.control}
-                                name='dateOfBirth'
-                                label='Date of Birth'
-                                placeholder='ex: MM-DD-YYYY'
-                            />
-                            
-                            <CustomInput 
-                                control={form.control}
-                                name='ssn'
-                                label='SSN'
-                                placeholder='000-00-0000'
-                            />
+                            <div className='flex gap-4'>
+                                <CustomInput 
+                                    control={form.control}
+                                    name='state'
+                                    label='State'
+                                    placeholder='ex: VA'
+                                />
+                              
+                                <CustomInput 
+                                    control={form.control}
+                                    name='postalCode'
+                                    label='Postal Code / Zip Code'
+                                    placeholder='ex: 12345'
+                                />
+                            </div>
+                            <div className='flex gap-4'>
+                                <CustomInput 
+                                    control={form.control}
+                                    name='dateOfBirth'
+                                    label='Date of Birth'
+                                    placeholder='ex: MM-DD-YYYY'
+                                />
+                                
+                                <CustomInput 
+                                    control={form.control}
+                                    name='ssn'
+                                    label='SSN'
+                                    placeholder='000-00-0000'
+                                />
+                            </div>
                            </> 
                         )}
                         <CustomInput 
