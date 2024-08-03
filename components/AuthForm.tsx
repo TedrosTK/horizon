@@ -30,6 +30,7 @@ const AuthForm = ({type}:{type:string}) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter()
+    
 
     const formSchema = authFormSchema(type);
 
