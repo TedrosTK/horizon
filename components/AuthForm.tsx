@@ -21,7 +21,7 @@ import { Divide, Loader2 } from 'lucide-react'
 import CustomInput from './CustomInput'
 import { authFormSchema } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
-import { signIn, signUp } from '@/lib/actions/user.actions'
+import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
 
 
 
@@ -43,29 +43,29 @@ const AuthForm = ({type}:{type:string}) => {
         },
     })
 
-// 2. Define a submit handler.
-const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsLoading(true)
-    try {
-        // sign up with Appwrite and create link plate token
+    // 2. Define a submit handler.
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        setIsLoading(true)
+        try {
+            // sign up with Appwrite and create link plate token
 
-        if (type === 'sign-up') {
-            const newUser =  await signUp(data);
-            setUser(newUser);
+            if (type === 'sign-up') {
+                const newUser =  await signUp(data);
+                setUser(newUser);
+            }
+            if(type === 'sign-in') {
+                const response = await signIn({
+                    email: data.email,
+                    password: data.password
+                })
+                if(response) router.push('/')
+            }
+        } catch (error) {
+            
+        } finally {
+            setIsLoading(false);
         }
-        if(type === 'sign-in') {
-            // const response = await signIn({
-            //     email: data.email,
-            //     password: data.password
-            // })
-            // if(response) router.push('/')
-        }
-    } catch (error) {
-        
-    } finally {
-        setIsLoading(false);
-    }
-        }
+            }
     
 return (   
     <section className="auth-form">
