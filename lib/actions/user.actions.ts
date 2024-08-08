@@ -55,6 +55,7 @@ export async function getLoggedInUser() {
     }
 }
 
+//Action to enable logging out
 export const logoutAccount = async () => {
     try {
         const {account} = await createSessionClient();
